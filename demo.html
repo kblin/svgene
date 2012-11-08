@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SVGene - An svg gene cluster visualization library in JavaScript</title>
+    <style>
+      .genetype-other {
+        fill: gray;
+        stroke: black;
+      }
+      .genetype-biosynthetic {
+        fill: #810e15;
+        stroke: black;
+      }
+      .geneline {
+        stroke-width: 1px;
+        stroke: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SVGene demo</h1>
+    <h3>Large...</h3>
+    <div id="cluster1"></div>
+    <h3>and small.</h3>
+    <div id="cluster2"></div>
+    <script src="lib/d3.v2.js"></script>
+    <script src="src/svgene.js"></script>
+    <script type="text/javascript">
+
+      var orfs = [
+        { start: 245986, end: 246783, strand:  1, locus_tag: "SCO0256", type: "other" },
+        { start: 246868, end: 247869, strand:  1, locus_tag: "SCO0257", type: "other" },
+        { start: 256281, end: 256442, strand:  1, locus_tag: "SCO0268", type: "other" },
+        { start: 256526, end: 259687, strand:  1, locus_tag: "SCO0269", type: "biosynthetic" },
+        { start: 259684, end: 261084, strand:  1, locus_tag: "SCO0270", type: "biosynthetic" },
+        { start: 269020, end: 269688, strand: -1, locus_tag: "SCO0277", type: "other" }
+      ];
+      var cluster = { start: 245986, end: 271748, idx: 1, orfs: orfs };
+
+      svgene.drawCluster("cluster1", cluster, 50, 1200);
+      svgene.drawCluster("cluster2", cluster, 20, 700);
+    </script>
+  </body>
+</html>
