@@ -15,5 +15,5 @@ Licensed under the Apache License version 2.0, see `LICENSE` file for details.
 
 > Copyright 2012 Kai Blin
 
-The `lib` directory contains a copy of the d3.v2.js library that has 
-it's own license terms. See <http://d3js.org/> for information about d3.
+The `lib` directory contains third-party libraries that have their own licence terms.
+They are provided for convenience.
