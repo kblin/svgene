@@ -1,6 +1,8 @@
 /* Copyright 2012 Kai Blin. Licensed under the Apache License v2.0, see LICENSE file */
 
-var svgene = { };
+var svgene = {
+    version: "0.1.1"
+};
 
 svgene.geneArrowPoints = function (orf, height, offset, scale) {
   var top_ = 0 + offset;
