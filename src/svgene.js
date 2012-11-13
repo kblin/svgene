@@ -3,6 +3,7 @@
 var svgene = {
     version: "0.1.1",
     label_height: 10,
+    extra_label_width: 50,
     unique_id: 0
 };
 
@@ -38,7 +39,7 @@ svgene.drawCluster = function(id, cluster, height, width) {
   var container = d3.select("#" + id);
   var chart = container.append("svg")
     .attr("height", height + svgene.label_height)
-    .attr("width", width);
+    .attr("width", width + svgene.extra_label_width);
 
   var idx = svgene.unique_id++;
   var offset = height/10;
@@ -48,7 +49,7 @@ svgene.drawCluster = function(id, cluster, height, width) {
   chart.append("line")
     .attr("x1", 0)
     .attr("y1", svgene.label_height + (height/2))
-    .attr("x2", cluster.end - cluster.start)
+    .attr("x2", width)
     .attr("y2", svgene.label_height + (height/2))
     .attr("class", "svgene-line");
   chart.selectAll("polygon")
