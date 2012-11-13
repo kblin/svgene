@@ -72,14 +72,18 @@ svgene.drawCluster = function(id, cluster, height, width) {
     .attr("class", "svgene-tooltip")
     .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-tooltip"; })
     .html(function(d) { return d.description});
+  svgene.init();
 };
 
 
-function tooltip_handler(ev) {
+svgene.tooltip_handler = function(ev) {
     var id = $(this).attr("id").replace("-orf", "-tooltip");
     var tooltip = $("#"+id);
 
-    $(".svgene-tooltip").hide();
+    if (svgene.active_tooltip) {
+        svgene.active_tooltip.hide();
+    }
+    svgene.active_tooltip = tooltip;
 
     if (tooltip.css("display") == 'none') {
         var offset = $(this).offset();
@@ -98,15 +102,15 @@ function tooltip_handler(ev) {
     } else {
         tooltip.hide();
     }
-}
+};
 
-$(document).ready(function() {
+svgene.init = function() {
     $(".svgene-orf").mouseover(function(e) {
         var id = $(this).attr("id").replace("-orf", "-label");
         $("#"+id).show();
     }).mouseout(function(e) {
         var id = $(this).attr("id").replace("-orf", "-label");
         $("#"+id).hide();
-    }).click(tooltip_handler);
+    }).click(svgene.tooltip_handler);
 
-});
+};
