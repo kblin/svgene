@@ -7,13 +7,13 @@ var svgene = {
     unique_id: 0
 };
 
-svgene.geneArrowPoints = function (orf, height, offset, scale) {
-  var top_ = svgene.label_height + offset;
-  var bottom = svgene.label_height + height - offset;
-  var middle = svgene.label_height + (height/2);
+svgene.geneArrowPoints = function (orf, height, offset, border, scale) {
+  var top_ = offset + svgene.label_height + border;
+  var bottom = offset + svgene.label_height + height - border;
+  var middle = offset + svgene.label_height + (height/2);
   if (orf.strand == 1) {
       var start = scale(orf.start);
-      var box_end = Math.max(scale(orf.end) - (2*offset), start);
+      var box_end = Math.max(scale(orf.end) - (2*border), start);
       var point_end = scale(orf.end);
       points  = "" + start + "," + top_;
       points += " " + box_end + "," + top_;
@@ -25,7 +25,7 @@ svgene.geneArrowPoints = function (orf, height, offset, scale) {
   if (orf.strand == -1) {
       var point_start = scale(orf.start);
       var end = scale(orf.end);
-      var box_start = Math.min(scale(orf.start) + (2*offset), end);
+      var box_start = Math.min(scale(orf.start) + (2*border), end);
       points = "" + point_start + "," + middle;
       points += " " + box_start + "," + top_;
       points += " " + end + "," + top_;
@@ -35,44 +35,47 @@ svgene.geneArrowPoints = function (orf, height, offset, scale) {
   }
 };
 
-svgene.drawCluster = function(id, cluster, height, width) {
+svgene.drawClusters = function(id, clusters, height, width) {
   var container = d3.select("#" + id);
+  var single_cluster_height = height + svgene.label_height;
   var chart = container.append("svg")
-    .attr("height", height + svgene.label_height)
+    .attr("height", single_cluster_height * clusters.length)
     .attr("width", width + svgene.extra_label_width);
 
-  var idx = svgene.unique_id++;
-  var offset = height/10;
-  var x = d3.scale.linear()
-    .domain([cluster.start, cluster.end])
-    .range([0, width]);
-  chart.append("line")
-    .attr("x1", 0)
-    .attr("y1", svgene.label_height + (height/2))
-    .attr("x2", width)
-    .attr("y2", svgene.label_height + (height/2))
-    .attr("class", "svgene-line");
-  chart.selectAll("polygon")
-    .data(cluster.orfs)
-  .enter().append("polygon")
-    .attr("points", function(d) { return svgene.geneArrowPoints(d, height, offset, x); })
-    .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
-    .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-orf"; })
-  chart.selectAll("text")
-    .data(cluster.orfs)
-  .enter().append("text")
-    .attr("x", function(d) { return x(d.start); })
-    .attr("y", svgene.label_height + offset/2)
-    .attr("class", "svgene-locustag")
-    .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-label"; })
-    .text(function(d) { return d.locus_tag; });
+  for (i=0; i < clusters.length; i++) {
+      var idx = svgene.unique_id++;
+      var offset = height/10;
+      var x = d3.scale.linear()
+        .domain([cluster.start, cluster.end])
+        .range([0, width]);
+      chart.append("line")
+        .attr("x1", 0)
+        .attr("y1", (single_cluster_height * i) + svgene.label_height + (height/2))
+        .attr("x2", width)
+        .attr("y2", (single_cluster_height * i) + svgene.label_height + (height/2))
+        .attr("class", "svgene-line");
+      chart.selectAll("polygon")
+        .data(cluster.orfs)
+      .enter().append("polygon")
+        .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, x); })
+        .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
+        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-orf"; })
+      chart.selectAll("text")
+        .data(cluster.orfs)
+      .enter().append("text")
+        .attr("x", function(d) { return x(d.start); })
+        .attr("y", (single_cluster_height * i) + svgene.label_height + offset/2)
+        .attr("class", "svgene-locustag")
+        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-label"; })
+        .text(function(d) { return d.locus_tag; });
 
-  container.selectAll("div")
-    .data(cluster.orfs)
-  .enter().append("div")
-    .attr("class", "svgene-tooltip")
-    .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-tooltip"; })
-    .html(function(d) { return d.description});
+      container.selectAll("div")
+        .data(cluster.orfs)
+      .enter().append("div")
+        .attr("class", "svgene-tooltip")
+        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-tooltip"; })
+        .html(function(d) { return d.description});
+  }
   svgene.init();
 };
 
