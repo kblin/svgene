@@ -1,7 +1,7 @@
 /* Copyright 2012 Kai Blin. Licensed under the Apache License v2.0, see LICENSE file */
 
 var svgene = {
-    version: "0.1.1",
+    version: "0.1.2",
     label_height: 10,
     extra_label_width: 50,
     unique_id: 0
@@ -41,8 +41,11 @@ svgene.drawClusters = function(id, clusters, height, width) {
   var chart = container.append("svg")
     .attr("height", single_cluster_height * clusters.length)
     .attr("width", width + svgene.extra_label_width);
+  var all_orfs = [];
 
   for (i=0; i < clusters.length; i++) {
+      var cluster = clusters[i];
+      all_orfs.push.apply(all_orfs, cluster.orfs);
       var idx = svgene.unique_id++;
       var offset = height/10;
       var x = d3.scale.linear()
@@ -55,13 +58,13 @@ svgene.drawClusters = function(id, clusters, height, width) {
         .attr("y2", (single_cluster_height * i) + svgene.label_height + (height/2))
         .attr("class", "svgene-line");
       chart.selectAll("polygon")
-        .data(cluster.orfs)
+        .data(all_orfs)
       .enter().append("polygon")
         .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, x); })
         .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
         .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-orf"; })
       chart.selectAll("text")
-        .data(cluster.orfs)
+        .data(all_orfs)
       .enter().append("text")
         .attr("x", function(d) { return x(d.start); })
         .attr("y", (single_cluster_height * i) + svgene.label_height + offset/2)
@@ -70,7 +73,7 @@ svgene.drawClusters = function(id, clusters, height, width) {
         .text(function(d) { return d.locus_tag; });
 
       container.selectAll("div")
-        .data(cluster.orfs)
+        .data(all_orfs)
       .enter().append("div")
         .attr("class", "svgene-tooltip")
         .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-tooltip"; })
@@ -92,7 +95,7 @@ svgene.tooltip_handler = function(ev) {
     if (tooltip.css("display") == 'none') {
         var offset = $(this).offset();
         tooltip.css("left", offset.left + 10);
-        tooltip.css("top", offset.top + $(this).parent().height()/2);
+        tooltip.css("top", offset.top + $(this).parent().height()/4);
         tooltip.show();
         tooltip.click(function(){$(this).hide()});
         var timeout = setTimeout(function(){ tooltip.slideUp("fast") }, 5000);
