@@ -95,7 +95,9 @@ svgene.tooltip_handler = function(ev) {
     if (tooltip.css("display") == 'none') {
         var offset = $(this).offset();
         tooltip.css("left", offset.left + 10);
-        tooltip.css("top", offset.top + $(this).parent().height()/4);
+        var this_parent = $(this).parent();
+        var top_offset = this_parent.height()/(this_parent.children('line').length * 2);
+        tooltip.css("top", offset.top + top_offset);
         tooltip.show();
         tooltip.click(function(){$(this).hide()});
         var timeout = setTimeout(function(){ tooltip.slideUp("fast") }, 5000);
