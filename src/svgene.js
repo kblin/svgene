@@ -81,6 +81,7 @@ svgene.drawClusters = function(id, clusters, height, width) {
         .html(function(d) { return d.description});
   }
   for (i=0; i < clusters.length; i++) {
+      var cluster = clusters[i];
       if (cluster.label !== undefined) {
         chart.append("text")
             .text(cluster.label)
