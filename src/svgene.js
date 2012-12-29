@@ -1,9 +1,9 @@
 /* Copyright 2012 Kai Blin. Licensed under the Apache License v2.0, see LICENSE file */
 
 var svgene = {
-    version: "0.1.3",
-    label_height: 10,
-    extra_label_width: 50,
+    version: "0.1.4",
+    label_height: 14,
+    extra_label_width: 100,
     unique_id: 0
 };
 
@@ -51,6 +51,14 @@ svgene.drawClusters = function(id, clusters, height, width) {
       var x = d3.scale.linear()
         .domain([cluster.start, cluster.end])
         .range([0, width]);
+      if (cluster.label !== undefined) {
+        chart.append("text")
+            .text(cluster.label)
+            .attr("class", "svgene-clusterlabel")
+            .attr("x", function() { return width + svgene.extra_label_width - this.getComputedTextLength() - 5})
+            .attr("y", function() { return (single_cluster_height * i) + svgene.label_height } )
+            .attr("font-size", svgene.label_height);
+      }
       chart.append("line")
         .attr("x1", 0)
         .attr("y1", (single_cluster_height * i) + svgene.label_height + (height/2))
