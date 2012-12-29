@@ -1,7 +1,7 @@
 /* Copyright 2012 Kai Blin. Licensed under the Apache License v2.0, see LICENSE file */
 
 var svgene = {
-    version: "0.1.2",
+    version: "0.1.3",
     label_height: 10,
     extra_label_width: 50,
     unique_id: 0
@@ -63,6 +63,7 @@ svgene.drawClusters = function(id, clusters, height, width) {
         .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, x); })
         .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
         .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag + "-orf"; })
+        .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } })
       chart.selectAll("text")
         .data(all_orfs)
       .enter().append("text")
