@@ -51,14 +51,6 @@ svgene.drawClusters = function(id, clusters, height, width) {
       var x = d3.scale.linear()
         .domain([cluster.start, cluster.end])
         .range([0, width]);
-      if (cluster.label !== undefined) {
-        chart.append("text")
-            .text(cluster.label)
-            .attr("class", "svgene-clusterlabel")
-            .attr("x", function() { return width + svgene.extra_label_width - this.getComputedTextLength() - 5})
-            .attr("y", function() { return (single_cluster_height * i) + svgene.label_height } )
-            .attr("font-size", svgene.label_height);
-      }
       chart.append("line")
         .attr("x1", 0)
         .attr("y1", (single_cluster_height * i) + svgene.label_height + (height/2))
@@ -87,6 +79,16 @@ svgene.drawClusters = function(id, clusters, height, width) {
         .attr("class", "svgene-tooltip")
         .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag.replace(/(:|\.)/g, '-') + "-tooltip"; })
         .html(function(d) { return d.description});
+  }
+  for (i=0; i < clusters.length; i++) {
+      if (cluster.label !== undefined) {
+        chart.append("text")
+            .text(cluster.label)
+            .attr("class", "svgene-clusterlabel")
+            .attr("x", function() { return width + svgene.extra_label_width - this.getComputedTextLength() - 5})
+            .attr("y", function() { return (single_cluster_height * i) + svgene.label_height } )
+            .attr("font-size", svgene.label_height);
+      }
   }
   svgene.init();
 };
