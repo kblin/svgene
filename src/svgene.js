@@ -62,7 +62,7 @@ svgene.drawClusters = function(id, clusters, height, width) {
       .enter().append("polygon")
         .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, x); })
         .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
-        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag.replace(/(:|\.)/g, '-') + "-orf"; })
+        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-orf"; })
         .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } })
       chart.selectAll("text")
         .data(all_orfs)
@@ -70,14 +70,14 @@ svgene.drawClusters = function(id, clusters, height, width) {
         .attr("x", function(d) { return x(d.start); })
         .attr("y", (single_cluster_height * i) + svgene.label_height + offset/2)
         .attr("class", "svgene-locustag")
-        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag.replace(/(:|\.)/g, '-') + "-label"; })
+        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-label"; })
         .text(function(d) { return d.locus_tag; });
 
       container.selectAll("div")
         .data(all_orfs)
       .enter().append("div")
         .attr("class", "svgene-tooltip")
-        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + d.locus_tag.replace(/(:|\.)/g, '-') + "-tooltip"; })
+        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-tooltip"; })
         .html(function(d) { return d.description});
   }
   for (i=0; i < clusters.length; i++) {
@@ -93,6 +93,10 @@ svgene.drawClusters = function(id, clusters, height, width) {
   }
   svgene.init();
 };
+
+svgene.tag_to_id = function(tag) {
+    return tag.replace(/(:|\.)/g, '-').replace(/-orf/g, '_orf');
+}
 
 
 svgene.tooltip_handler = function(ev) {
