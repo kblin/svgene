@@ -38,6 +38,8 @@ svgene.geneArrowPoints = function (orf, height, offset, border, scale) {
 svgene.drawClusters = function(id, clusters, height, width) {
   var container = d3.select("#" + id);
   var single_cluster_height = height + svgene.label_height;
+  container.selectAll("svg").remove();
+  container.selectAll("div").remove();
   var chart = container.append("svg")
     .attr("height", single_cluster_height * clusters.length)
     .attr("width", width + svgene.extra_label_width);
