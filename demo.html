@@ -39,6 +39,8 @@
     <div id="cluster1"></div>
     <h3>and small.</h3>
     <div id="cluster2"></div>
+    <h3>And unordered</h3>
+    <div id="cluster3"></div>
     <script src="lib/jquery.js"></script>
     <script src="lib/d3.v2.js"></script>
     <script src="src/svgene.js"></script>
@@ -75,8 +77,10 @@
           description: 'hypothetical protein<br>smCOG: -<br>Location: 269020-269688' }
       ];
       var cluster2 = { start: 245986, end: 271748, idx: 2, orfs: orfs2 };
+      var cluster3 = { start: 245986, end: 271748, idx: 3, orfs: orfs, unordered: true };
       svgene.drawClusters("cluster1", [cluster, cluster2], 50, 1200);
       svgene.drawClusters("cluster2", [cluster, cluster2, cluster2, cluster], 20, 700);
+      svgene.drawClusters("cluster3", [cluster3], 20, 700);
     </script>
   </body>
 </html>
