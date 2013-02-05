@@ -84,8 +84,8 @@ svgene.drawUnorderedClusterOrfs = function(cluster, chart, all_orfs, pos_scale,
         }
         return orf_width;
       })
-    .attr("rx", 10)
-    .attr("ry", 10)
+    .attr("rx", 3)
+    .attr("ry", 3)
     .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
     .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-orf"; })
     .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } })
