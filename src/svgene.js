@@ -1,7 +1,7 @@
 /* Copyright 2012 Kai Blin. Licensed under the Apache License v2.0, see LICENSE file */
 
 var svgene = {
-    version: "0.1.4",
+    version: "0.1.5",
     label_height: 14,
     extra_label_width: 100,
     unique_id: 0
