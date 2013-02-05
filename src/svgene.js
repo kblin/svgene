@@ -35,6 +35,24 @@ svgene.geneArrowPoints = function (orf, height, offset, border, scale) {
   }
 };
 
+svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, scale,
+                                         idx, height, width,
+                                         single_cluster_height, offset) {
+  chart.append("line")
+    .attr("x1", 0)
+    .attr("y1", (single_cluster_height * i) + svgene.label_height + (height/2))
+    .attr("x2", width)
+    .attr("y2", (single_cluster_height * i) + svgene.label_height + (height/2))
+    .attr("class", "svgene-line");
+  chart.selectAll("polygon")
+    .data(all_orfs)
+  .enter().append("polygon")
+    .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, scale); })
+    .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
+    .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-orf"; })
+    .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } })
+};
+
 svgene.drawClusters = function(id, clusters, height, width) {
   var container = d3.select("#" + id);
   var single_cluster_height = height + svgene.label_height;
@@ -53,19 +71,9 @@ svgene.drawClusters = function(id, clusters, height, width) {
       var x = d3.scale.linear()
         .domain([cluster.start, cluster.end])
         .range([0, width]);
-      chart.append("line")
-        .attr("x1", 0)
-        .attr("y1", (single_cluster_height * i) + svgene.label_height + (height/2))
-        .attr("x2", width)
-        .attr("y2", (single_cluster_height * i) + svgene.label_height + (height/2))
-        .attr("class", "svgene-line");
-      chart.selectAll("polygon")
-        .data(all_orfs)
-      .enter().append("polygon")
-        .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, x); })
-        .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
-        .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-orf"; })
-        .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } })
+      svgene.drawOrderedClusterOrfs(cluster, chart, all_orfs, x,
+                                    idx, height, width,
+                                    single_cluster_height, offset);
       chart.selectAll("text")
         .data(all_orfs)
       .enter().append("text")
