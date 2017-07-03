@@ -35,8 +35,8 @@ svgene.geneArrowPoints = function (orf, height, offset, border, scale) {
   }
 };
 
-svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, scale,
-                                         i, idx, height, width,
+svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, borders,
+                                         scale, i, idx, height, width,
                                          single_cluster_height, offset) {
   chart.append("line")
     .attr("x1", 0)
@@ -44,6 +44,14 @@ svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, scale,
     .attr("x2", width)
     .attr("y2", (single_cluster_height * i) + svgene.label_height + (height/2))
     .attr("class", "svgene-line");
+  chart.selectAll("rect")
+    .data(borders)
+  .enter().append("rect")
+    .attr("x", function(d){ return scale(d.start)})
+    .attr("y", function(d){ var y = single_cluster_height * i  + offset; if (d.tool == "clusterfinder") y -= 3; return y})
+    .attr("height", 5)
+    .attr("width", function(d){ var width = scale(d.end) - scale(d.start); return width})
+    .attr("class", function(d){ return "svgene-border-" + d.tool});
   chart.selectAll("polygon")
     .data(all_orfs)
   .enter().append("polygon")
@@ -96,10 +104,12 @@ svgene.drawClusters = function(id, clusters, height, width) {
     .attr("height", single_cluster_height * clusters.length)
     .attr("width", width + svgene.extra_label_width);
   var all_orfs = [];
+  var all_borders = [];
 
   for (i=0; i < clusters.length; i++) {
       var cluster = clusters[i];
       all_orfs.push.apply(all_orfs, cluster.orfs.sort(svgene.sort_biosynthetic_orfs_last));
+      all_borders.push.apply(all_borders, cluster.borders ? cluster.borders : []);
       var idx = svgene.unique_id++;
       var offset = height/10;
       var x = d3.scale.linear()
@@ -110,8 +120,8 @@ svgene.drawClusters = function(id, clusters, height, width) {
                                           i, idx, height, width,
                                           single_cluster_height, offset);
       } else {
-          svgene.drawOrderedClusterOrfs(cluster, chart, all_orfs, x,
-                                        i, idx, height, width,
+          svgene.drawOrderedClusterOrfs(cluster, chart, all_orfs, all_borders,
+                                        x, i, idx, height, width,
                                         single_cluster_height, offset);
       }
       container.selectAll("div")
