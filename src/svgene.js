@@ -99,7 +99,7 @@ svgene.drawClusters = function(id, clusters, height, width) {
 
   for (i=0; i < clusters.length; i++) {
       var cluster = clusters[i];
-      all_orfs.push.apply(all_orfs, cluster.orfs);
+      all_orfs.push.apply(all_orfs, cluster.orfs.sort(svgene.sort_biosynthetic_orfs_last));
       var idx = svgene.unique_id++;
       var offset = height/10;
       var x = d3.scale.linear()
@@ -133,6 +133,17 @@ svgene.drawClusters = function(id, clusters, height, width) {
       }
   }
   svgene.init();
+};
+
+svgene.sort_biosynthetic_orfs_last = function(a, b) {
+    if ((a.type != "biosynthetic" && b.type != "biosynthetic") ||
+        (a.type == "biosynthetic" && b.type == "biosynthetic")) {
+        return a.start - b.start;
+    };
+    if (a.type == "biosynthetic") {
+        return 1;
+    }
+    return -1;
 };
 
 svgene.tag_to_id = function(tag) {
