@@ -35,7 +35,17 @@ svgene.geneArrowPoints = function (orf, height, offset, border, scale) {
   }
 };
 
-svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, borders,
+svgene.ttaCodonPoints = function (codon, height, offset, border, scale) {
+    var top_ = offset + svgene.label_height + height;;
+    var bottom = offset + (2 * svgene.label_height) + height - border;
+    var tip = Math.floor(scale(codon.start), scale(codon.end));
+    var points = "" + tip + "," + top_;
+    points += " " + (tip - 5) + "," + bottom;
+    points += " " + (tip + 5) + "," + bottom;
+    return points;
+}
+
+svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, borders, tta_codons,
                                          scale, i, idx, height, width,
                                          single_cluster_height, offset) {
   chart.append("line")
@@ -58,7 +68,12 @@ svgene.drawOrderedClusterOrfs = function(cluster, chart, all_orfs, borders,
     .attr("points", function(d) { return svgene.geneArrowPoints(d, height, (single_cluster_height * i), offset, scale); })
     .attr("class", function(d) { return "svgene-type-" + d.type + " svgene-orf"; })
     .attr("id", function(d) { return idx + "-cluster" + cluster.idx + "-" + svgene.tag_to_id(d.locus_tag) + "-orf"; })
-    .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } })
+    .attr("style", function(d) { if (d.color !== undefined) { return "fill:" + d.color; } });
+  chart.selectAll("polyline.svgene-tta-codon")
+    .data(tta_codons)
+  .enter().append("polyline")
+    .attr("points", function(d) { return svgene.ttaCodonPoints(d, height, (single_cluster_height * i), offset, scale) })
+    .attr("class", "svgene-tta-codon");
   chart.selectAll("text")
     .data(all_orfs)
   .enter().append("text")
@@ -97,7 +112,7 @@ svgene.drawUnorderedClusterOrfs = function(cluster, chart, all_orfs, scale,
 
 svgene.drawClusters = function(id, clusters, height, width) {
   var container = d3.select("#" + id);
-  var single_cluster_height = height + svgene.label_height;
+  var single_cluster_height = height + (2 * svgene.label_height);
   container.selectAll("svg").remove();
   container.selectAll("div").remove();
   var chart = container.append("svg")
@@ -105,11 +120,13 @@ svgene.drawClusters = function(id, clusters, height, width) {
     .attr("width", width + svgene.extra_label_width);
   var all_orfs = [];
   var all_borders = [];
+  var all_ttas = [];
 
   for (i=0; i < clusters.length; i++) {
       var cluster = clusters[i];
       all_orfs.push.apply(all_orfs, cluster.orfs.sort(svgene.sort_biosynthetic_orfs_last));
       all_borders.push.apply(all_borders, cluster.borders ? cluster.borders : []);
+      all_ttas.push.apply(all_ttas, cluster.tta_codons ? cluster.tta_codons: []);
       var idx = svgene.unique_id++;
       var offset = height/10;
       var x = d3.scale.linear()
@@ -120,7 +137,7 @@ svgene.drawClusters = function(id, clusters, height, width) {
                                           i, idx, height, width,
                                           single_cluster_height, offset);
       } else {
-          svgene.drawOrderedClusterOrfs(cluster, chart, all_orfs, all_borders,
+          svgene.drawOrderedClusterOrfs(cluster, chart, all_orfs, all_borders, all_ttas,
                                         x, i, idx, height, width,
                                         single_cluster_height, offset);
       }

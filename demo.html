@@ -25,6 +25,9 @@
       .svgene-border-clusterfinder {
         fill: teal;
       }
+      .svgene-tta-codon {
+        fill: magenta;
+      }
       .svgene-tooltip {
         border: 1px solid slategray;
         background-color: #ddd;
@@ -52,6 +55,9 @@
       var borders = [
         { start: 256281, end: 261084, tool: ["clusterfinder"] }
       ];
+      var tta_codons = [
+        { start: 256284, end: 256288 }
+      ];
       var orfs = [
         { start: 245986, end: 246783, strand:  1, locus_tag: "SCO0256", type: "other", color: "tomato",
           description: 'short chain oxidoreductase<br>smCOG: SMCOG1001 (short-chain dehydrogenase/reductase SDR)<br>Location: 245986-246783' },
@@ -66,7 +72,8 @@
         { start: 269020, end: 269688, strand: -1, locus_tag: "SCO0277", type: "other", color: "mediumpurple",
           description: 'hypothetical protein<br>smCOG: -<br>Location: 269020-269688' }
       ];
-      var cluster = { start: 245986, end: 271748, idx: 1, orfs: orfs, borders: borders, label: 'First cluster'};
+      var cluster = { start: 245986, end: 271748, idx: 1, orfs: orfs, borders: borders,
+                      tta_codons:tta_codons, label: 'First cluster' };
 
       var orfs2 = [
         { start: 245986, end: 246783, strand:  -1, locus_tag: "SCO0256", type: "other",
@@ -82,7 +89,7 @@
         { start: 269020, end: 269688, strand: 1, locus_tag: "SCO0277", type: "other",
           description: 'hypothetical protein<br>smCOG: -<br>Location: 269020-269688' }
       ];
-      var cluster2 = { start: 245986, end: 271748, idx: 2, orfs: orfs2, borders: borders};
+      var cluster2 = { start: 245986, end: 271748, idx: 2, orfs: orfs2, borders: borders, tta_codons:tta_codons};
       var cluster3 = { start: 245986, end: 271748, idx: 3, orfs: orfs, unordered: true };
       svgene.drawClusters("cluster1", [cluster, cluster2], 50, 1200);
       svgene.drawClusters("cluster2", [cluster, cluster2, cluster2, cluster], 20, 700);
