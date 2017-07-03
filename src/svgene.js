@@ -178,5 +178,7 @@ svgene.init = function() {
         var id = $(this).attr("id").replace("-orf", "-label");
         $("#"+id).hide();
     }).click(svgene.tooltip_handler);
-
+    $(".svgene-textarea").click(function(event) {
+        event.stopPropagation();
+    });
 };
