@@ -129,7 +129,8 @@ svgene.drawClusters = function(id, clusters, height, width) {
       all_ttas.push.apply(all_ttas, cluster.tta_codons ? cluster.tta_codons: []);
       var idx = svgene.unique_id++;
       var offset = height/10;
-      var x = d3.scale.linear()
+      var x = d3.scaleLinear()
+      // var x = d3.scale.linear()   d3.v2
         .domain([cluster.start, cluster.end])
         .range([0, width]);
       if (cluster.unordered) {
